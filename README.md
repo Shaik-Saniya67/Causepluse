@@ -19,7 +19,7 @@ Built for **WarriorHacks 2.0** · LegalTech track · 24-hour build
 
 <br>
 
-<img src="docs/screenshots/home.png" alt="CausePulse home dashboard" width="900">
+
 
 </div>
 
