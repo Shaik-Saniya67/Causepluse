@@ -42,26 +42,6 @@ Anything ambiguous goes to **Needs Review**, where *you* decide. Nothing is sile
 
 > ⚠️ **Honest by design.** All bundled sample data is **fictional demo data** (fictional court, parties and judges), clearly labelled in the UI and in the sample PDF. CausePulse works only from the PDF you upload. It is not a live court feed and gives no legal advice.
 
----
-
-## 🖼️ Screenshots
-
-<table>
-  <tr>
-    <td align="center" width="50%"><img src="docs/screenshots/review.png" alt="Needs Review page"><br><b>Needs Review</b><br><sub>Every possible match as its own card, with signals and the original page</sub></td>
-    <td align="center" width="50%"><img src="docs/screenshots/tracker.png" alt="Hearing Tracker"><br><b>Hearing Tracker</b><br><sub>Filter by court, status and date · cards or table · CSV export</sub></td>
-  </tr>
-  <tr>
-    <td align="center"><img src="docs/screenshots/detail.png" alt="Case detail with source evidence"><br><b>Case Detail</b><br><sub>Match reasoning, highlighted source row, correct an extraction without re-uploading</sub></td>
-    <td align="center"><img src="docs/screenshots/upload.png" alt="Upload cause list"><br><b>Upload Cause List</b><br><sub>Live 3-stage progress, clear errors, entry inspector</sub></td>
-  </tr>
-  <tr>
-    <td align="center"><img src="docs/screenshots/cases.png" alt="My Cases"><br><b>My Cases</b><br><sub>Add, edit, bulk import, duplicate detection</sub></td>
-    <td align="center"><img src="docs/screenshots/mobile.png" alt="Mobile layout" width="200"><br><b>Mobile-first</b><br><sub>Bottom navigation and stacked layout on phones</sub></td>
-  </tr>
-</table>
-
----
 
 ## ⚙️ How it works
 
