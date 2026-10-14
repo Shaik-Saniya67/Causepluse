@@ -1,0 +1,66 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+html,body{margin:0;height:100%;background:transparent;overflow:hidden}
+#wrap{position:relative;width:100%;height:100%;background:radial-gradient(55% 55% at 50% 48%,rgba(198,166,107,.20),transparent 72%)}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity 1.4s ease}
+canvas.on{opacity:1}
+#fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:opacity .8s}
+#fallback svg{height:92%;transform-origin:50% 20%;animation:sway 7s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+@media (prefers-reduced-motion:reduce){#fallback svg{animation:none}}
+</style></head><body>
+<div id="wrap">
+<div id="fallback"><svg viewBox="0 0 200 230" fill="none" stroke="#C6A66B" stroke-width="2.2" stroke-linecap="round">
+<ellipse cx="100" cy="212" rx="48" ry="8"/><path d="M70 205h60M100 205V28"/><circle cx="100" cy="22" r="6"/>
+<path d="M30 52h140"/><circle cx="30" cy="52" r="3.5"/><circle cx="170" cy="52" r="3.5"/>
+<path d="M30 52L12 122M30 52l36 70M12 122h54M170 52l-36 70M170 52l18 70M134 122h54" stroke-width="1.4"/>
+<path d="M10 122q29 34 58 0M132 122q29 34 58 0"/></svg></div>
+<canvas id="c"></canvas></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  if(!window.THREE){return;}
+  var wrap=document.getElementById('wrap'),canvas=document.getElementById('c'),renderer;
+  try{renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});}catch(e){return;}
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  var scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(30,1,.1,100);
+  camera.position.set(0,.3,10.5);camera.lookAt(0,.1,0);
+  var gold=new THREE.MeshStandardMaterial({color:0xC6A66B,metalness:.55,roughness:.32,side:THREE.DoubleSide});
+  var jade=new THREE.MeshStandardMaterial({color:0x20594A,metalness:.3,roughness:.5});
+  var g=new THREE.Group();scene.add(g);
+  function add(geo,mat,x,y,z,parent){var m=new THREE.Mesh(geo,mat);m.position.set(x||0,y||0,z||0);(parent||g).add(m);return m;}
+  add(new THREE.CylinderGeometry(1.25,1.45,.2,56),jade,0,-1.85,0);
+  add(new THREE.CylinderGeometry(.95,1.1,.14,56),gold,0,-1.68,0);
+  add(new THREE.CylinderGeometry(.07,.11,3.3,28),gold,0,-.05,0);
+  add(new THREE.SphereGeometry(.15,24,24),gold,0,1.72,0);
+  var beam=new THREE.Group();beam.position.set(0,1.45,0);g.add(beam);
+  var bm=add(new THREE.CylinderGeometry(.05,.05,3.4,20),gold,0,0,0,beam);bm.rotation.z=Math.PI/2;
+  add(new THREE.SphereGeometry(.09,16,16),gold,-1.7,0,0,beam);add(new THREE.SphereGeometry(.09,16,16),gold,1.7,0,0,beam);
+  var pts=[];for(var i=0;i<=16;i++){var a=i/16*Math.PI/2;pts.push(new THREE.Vector2(.02+Math.sin(a)*.66,-Math.cos(a)*.17));}
+  pts.push(new THREE.Vector2(.68,.01));pts.push(new THREE.Vector2(.7,.01));
+  var bowl=new THREE.LatheGeometry(pts,48),lineMat=new THREE.LineBasicMaterial({color:0xC6A66B});
+  function pan(x){var p=new THREE.Group();p.position.set(x,0,0);beam.add(p);
+    for(var k=0;k<3;k++){var a=k/3*Math.PI*2,gp=[new THREE.Vector3(0,0,0),new THREE.Vector3(Math.cos(a)*.66,-1.35,Math.sin(a)*.66)];
+      p.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(gp),lineMat));}
+    add(bowl,gold,0,-1.35,0,p);return p;}
+  var pl=pan(-1.7),pr=pan(1.7);
+  scene.add(new THREE.AmbientLight(0xffffff,.55));
+  var d=new THREE.DirectionalLight(0xfff0d2,1.5);d.position.set(3,4,6);scene.add(d);
+  var p2=new THREE.PointLight(0x3fae8d,.9,30);p2.position.set(-5,1,3);scene.add(p2);
+  var p3=new THREE.PointLight(0xC6A66B,.8,30);p3.position.set(4,-2,4);scene.add(p3);
+  function size(){var w=wrap.clientWidth,h=wrap.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+  size();window.addEventListener('resize',size);
+  var t0=performance.now(),shown=false;
+  function frame(now){
+    var t=(now-t0)/1000,e=Math.min(t/1.8,1),ease=1-Math.pow(1-e,3);
+    g.scale.setScalar(.86+.14*ease);
+    g.rotation.y=reduce?-.35:(-.9+.9*ease)+Math.sin(t*.35)*.35;
+    var tilt=reduce?0:Math.sin(t*.8)*.045;beam.rotation.z=tilt;pl.rotation.z=-tilt;pr.rotation.z=-tilt;
+    renderer.render(scene,camera);
+    if(!shown){shown=true;canvas.classList.add('on');setTimeout(function(){document.getElementById('fallback').style.opacity=0;},900);}
+    if(!reduce)requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script></body></html>
